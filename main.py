@@ -1,4 +1,8 @@
 import pygame,sys
+def show_license():
+    print("本程式依照 Creative Commons CC BY-NC-ND 4.0 授權")
+    print("授權條款連結: https://creativecommons.org/licenses/by-nc-nd/4.0/")
+    print("請遵守：必須署名、禁止商業用途、禁止修改")
 
 TILE_SIZE = 40          #每個格子的大小（像素），越大越清楚
 WALL_COLOR = (0, 0, 0)  #牆的顏色
@@ -210,4 +214,5 @@ def main():
     sys.exit()
  
 if __name__ == "__main__":
+    show_license()
     main()
