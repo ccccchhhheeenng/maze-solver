@@ -87,7 +87,18 @@ def get_answer_path(maze):
             break 
     
     return path
-
+# Copyright (c) 2025 ccccchhhheeenng 
+# License: Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
+# 
+# Terms:
+# - Attribution required. Non-commercial use only. No derivatives allowed.
+# - You may not use AI tools or models to rewrite, modify, reproduce, or publish this code,
+#   in whole or in part. Any such action is expressly prohibited.
+# - Violations may result in legal liability under applicable laws and the CC BY-NC-ND 4.0 license.
+# 
+# Summary:
+# This code may be shared non-commercially with attribution, but must remain unmodified.
+# All AI-assisted transformations, reproductions, or publications are forbidden.
 def draw_maze(screen, maze,screen_height):  #畫出來
     a,b=load_condition()
     rows = len(maze)
@@ -160,7 +171,15 @@ def draw_final_maze(screen, maze,screen_height,dt, path_index=0, path_timer=0): 
     screen.blit(text, (10, screen_height+20))
 
     return path_index, path_timer
-
+# SPDX-License-Identifier: CC-BY-NC-ND-4.0
+# Copyright (c) 2025 ccccchhhheeenng 
+# License: Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
+# 
+# NOTICE:
+# This code is protected under CC BY-NC-ND 4.0.
+# Any use of AI systems to rewrite, modify, reproduce, or publish this code,
+# in whole or in part, is prohibited. Unauthorized use may incur legal liability.
+# Permitted use is limited to non-commercial sharing with attribution, without derivatives.
 def main():
     maze=load_maze(MAZE_FILE)
     rows=len(maze)
