@@ -43,7 +43,6 @@ int condition(int a, int b, bool final){
 int main() {
     int n = 17, m = 17; // 固定大小
 
-    // 直接把輸入資料寫在字串陣列
     const char *input[] = {
         "11111111111111111",
         "S0000010001000001",

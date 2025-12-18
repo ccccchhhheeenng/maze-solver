@@ -2,15 +2,15 @@ import pygame,sys,time,threading
 lock = threading.Lock()
 class Data:
     def __init__(self):
-            self.a=0
+            self.qwert=0
             self.steps=0
             self.cond=0
             self.maze=[[0]*17 for _ in range(17)]
     def load_maze(self):  #讀取
         maze=[[0]*17 for _ in range(17)]
-        a,steps,cond=self.load_condition()
+        qwert,steps,cond=self.load_condition()
         if cond==0:
-            return a,steps,cond,maze
+            return qwert,steps,cond,maze
         filename="output.txt"
         tmp=[]
         with open(filename, "r", encoding="utf-8") as f:
@@ -21,10 +21,10 @@ class Data:
                         maze[i][j]=int(tmp[j])
                     except:
                         maze[i][j]=tmp[j]
-        return a,steps,cond,maze
+        return qwert,steps,cond,maze
     def load_condition(self):
         try:
-            with open("condition.txt", "r", encoding="utf-8") as f:
+            with open("condition.txt", "r", encoding="utf-8") as f:     
                 line=f.readline()
                 L=line.split(",")
                 return int(L[0]),int(L[1]),int(L[2])
@@ -33,10 +33,10 @@ class Data:
             return 0,0,0
     def update_data(self):
         while True:
-            a,steps,cond,maze=self.load_maze()
+            qwert,steps,cond,maze=self.load_maze()
             if cond:
                 with lock:
-                    self.a=a
+                    self.qwert=qwert
                     self.steps=steps
                     self.cond=cond
                     self.maze=maze
@@ -114,7 +114,7 @@ def get_answer_path(maze):
     
     return path
     
-def draw_maze(a,steps,screen, maze,screen_height):  #畫出來
+def draw_maze(steps,screen, maze,screen_height):  #畫出來
     rows = len(maze)
     cols = len(maze[0])
     original=load_origin_maze()
@@ -141,8 +141,7 @@ def draw_maze(a,steps,screen, maze,screen_height):  #畫出來
     text = font.render(f"探索步數：{steps}", True, (200, 200, 200))
     screen.blit(text, (10, screen_height))
    
-def draw_final_maze(a,steps,screen, maze,screen_height,dt, path_index=0, path_timer=0):  #畫出結算
-        
+def draw_final_maze(steps,screen, maze,screen_height,dt, path_index=0, path_timer=0):  #畫出結算
     speed = 0.1      #跑馬燈速度
     people1=pygame.image.load("people1.png")
     people2=pygame.image.load("people2.png")
@@ -186,7 +185,8 @@ def draw_final_maze(a,steps,screen, maze,screen_height,dt, path_index=0, path_ti
     return path_index, path_timer
 
 def main():
-    a,steps,maze=data.a,data.steps,data.maze
+    with lock:
+        qwert,steps,maze=data.qwert,data.steps,data.maze
     rows=len(maze)
     cols=len(maze[0])
     global answer_path, path_index, path_timer
@@ -206,7 +206,7 @@ def main():
     while running:
         dt=clock.tick(5)/1000
         with lock:
-            a,steps,maze=data.a,data.steps,data.maze
+            qwert,steps,maze=data.qwert,data.steps,data.maze
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -226,14 +226,13 @@ def main():
                         pygame.draw.rect(screen, WALL_COLOR, rect) 
                     else:
                         pygame.draw.rect(screen, PATH_COLOR, rect)  
-            path_index, path_timer = draw_final_maze(a,steps,screen, maze, screen_height, dt, path_index, path_timer) 
+            path_index, path_timer = draw_final_maze(steps,screen, maze, screen_height, dt, path_index, path_timer) 
         else:
-            draw_maze(a,steps,screen, maze, screen_height)   
+            draw_maze(qwert,steps,screen, maze, screen_height)   
         font = pygame.font.SysFont("microsoftyahei", 40)
         text = font.render(f"BFS演算法", True, (200, 200, 200))
         screen.blit(text, (200, screen_height)) 
         pygame.display.flip()
-   
     pygame.quit()
     sys.exit()
 
