@@ -9,6 +9,8 @@ class Data:
     def load_maze(self):  #讀取
         maze=[[0]*17 for _ in range(17)]
         a,steps,cond=self.load_condition()
+        if cond==0:
+            return a,steps,cond,maze
         filename="output.txt"
         tmp=[]
         with open(filename, "r", encoding="utf-8") as f:
@@ -41,7 +43,7 @@ class Data:
             else:
                 print("data load failed, retrying...")
             time.sleep(0.05)
-data=Data()   
+data=Data()
 
 
 def show_license():
