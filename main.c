@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <windows.h>
+#include <stdbool.h>
 
 #define MAXN 1000
-int output(int ei, int ej, int ansArray[MAXN + 2][MAXN + 2], int n, int m);
-int condition(int a, int b);
+int output(int ei, int ej, int ansArray[MAXN + 2][MAXN + 2], int n, int m, int a, int b);
+int condition(int a, int b,bool c);
 char board[MAXN + 2][MAXN + 2];
 int ans[MAXN + 2][MAXN + 2];
 int prevX[MAXN + 2][MAXN + 2];
@@ -16,7 +17,9 @@ int head = 0, tail = 0;
 
 int dir[4][2] = { {-1,0},{1,0},{0,-1},{0,1} };
 
-int output(int ei, int ej, int ansArray[MAXN + 2][MAXN + 2], int n, int m){
+int output(int ei, int ej, int ansArray[MAXN + 2][MAXN + 2], int n, int m, int cond, int steps){
+    
+    condition(cond, steps,false);
     FILE *fp = fopen("output.txt", "w");
     for(int i=1;i<=n;i++){
         for(int j=1;j<=m;j++){
@@ -26,11 +29,14 @@ int output(int ei, int ej, int ansArray[MAXN + 2][MAXN + 2], int n, int m){
     fprintf(fp,"\n");
     }
     fclose(fp);
+    condition(cond, steps,true);
     return 0;
 }
-int condition(int a, int b){
+int condition(int a, int b, bool final){
     FILE *fp = fopen("condition.txt", "w");
-    fprintf(fp,"%d,%d\n",a,b);
+    int tmp;
+    tmp = final ? 1 : 0;
+    fprintf(fp,"%d,%d,%d\n",a,b,tmp);
     fclose(fp);
     return 0;
 }
@@ -97,9 +103,9 @@ int main() {
             queue[tail++] = (Node){nx,ny};
         }
         //輸出到檔案
-        output(ei,ej,ans,n,m);
-        condition(ans[cur.x][cur.y],head);
-        Sleep(200);
+        output(ei,ej,ans,n,m,ans[cur.x][cur.y],head);
+
+        Sleep(150);
         printf("step%d\n",head);
     }
 
