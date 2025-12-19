@@ -1,5 +1,5 @@
 import pygame,sys,time,threading,subprocess
-lock = threading.Lock()
+lock=threading.Lock()
 class Data:
     def __init__(self):
             self.bottom_txt_cond=0
@@ -24,7 +24,7 @@ class Data:
         return bottom_txt_cond,steps,cond,maze
     def load_condition(self):
         try:
-            with open("condition.txt", "r", encoding="utf-8") as f:     
+            with open("condition.txt", "r", encoding="utf-8") as f:
                 line=f.readline()
                 L=line.split(",")
                 return int(L[0]),int(L[1]),int(L[2])
@@ -36,13 +36,14 @@ class Data:
             bottom_txt_cond,steps,cond,maze=self.load_maze()
             if cond:
                 if cond!=3:
-                    self.bottom_txt_cond=bottom_txt_cond
-                    self.steps=steps
-                    self.cond=cond
-                    self.maze=maze
+                    with lock:
+                        self.bottom_txt_cond=bottom_txt_cond
+                        self.steps=steps
+                        self.cond=cond
+                        self.maze=maze
             else:
                 print("data load failed, retrying...")
-            time.sleep(0.05)
+            time.sleep(0.2)
 data=Data()
 
 
@@ -59,6 +60,8 @@ START_COLOR = (70, 130, 180) #S的顏色
 ANS_COLOR = (51,255,153) #答案的顏色
 button_bfs = pygame.Rect(50, 10, 180, 40)
 button_flood = pygame.Rect(250, 10, 180, 40)
+people1=pygame.image.load("people1.png")
+people2=pygame.image.load("people2.png")
 
 def draw_button(screen, rect, text):
     pygame.draw.rect(screen, (80,80,80), rect)
@@ -87,7 +90,7 @@ def load_origin_maze():  #讀取
                 except:
                     maze[i][j]=tmp[j]
     return maze
-
+ORIGIN_MAZE = load_origin_maze()
 
 def get_gradient_color(value, max_value):
     if max_value == 0:
@@ -131,8 +134,7 @@ def get_answer_path(maze):
 def draw_maze(bottom_txt_cond,steps,screen, maze,screen_height):  #畫出來
     rows = len(maze)
     cols = len(maze[0])
-    original=load_origin_maze()
-   
+    original=ORIGIN_MAZE
     for y in range(rows):
         for x in range(cols):
             rect = pygame.Rect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE)
@@ -157,8 +159,6 @@ def draw_maze(bottom_txt_cond,steps,screen, maze,screen_height):  #畫出來
    
 def draw_final_maze(steps,screen, maze,screen_height,dt, path_index=0, path_timer=0):  #畫出結算
     speed = 0.1      #跑馬燈速度
-    people1=pygame.image.load("people1.png")
-    people2=pygame.image.load("people2.png")
     global answer_path
 
     path_timer += dt
@@ -210,7 +210,6 @@ def main():
     
     screen_width=cols*TILE_SIZE
     screen_height=rows*TILE_SIZE
-   
     pygame.init()
     screen = pygame.display.set_mode((screen_width, screen_height+50))
     pygame.display.set_caption("迷宮")
@@ -218,8 +217,14 @@ def main():
     running = True
     while running:
         dt=clock.tick(5)/1000
-        with lock:
-            bottom_txt_cond,steps,maze,cond,bottom_txt_cond=data.bottom_txt_cond,data.steps,data.maze,data.cond,data.bottom_txt_cond
+        try:
+            with lock:
+                bottom_txt_cond = data.bottom_txt_cond
+                steps = data.steps
+                cond = data.cond
+                maze = data.maze
+        except:
+            pass
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False

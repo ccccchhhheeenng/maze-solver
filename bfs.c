@@ -96,7 +96,7 @@ int main() {
             queue[tail++] = (Node){nx, ny};
         }
         output(ans, n, m, 0, head);
-        Sleep(100);
+        Sleep(200);
         printf("Searching Path Step: %d\n", head);
     }
 
@@ -127,7 +127,7 @@ int main() {
     FILE *fp2 = fopen("condition.txt", "w");
     fprintf(fp2, "%d,%d,%d\n", 0, head, 2);
     fclose(fp2);
-    Sleep(20000);
+    Sleep(15000);
     fp2 = fopen("condition.txt", "w");
     fprintf(fp2, "%d,%d,%d\n", 0, head, -1);
     fclose(fp2);

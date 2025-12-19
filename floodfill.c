@@ -87,11 +87,11 @@ int main() {
             queue[tail++] = (Node){nx, ny};
         }
         output(ans, n, m, 1, head);
-        Sleep(100);
+        Sleep(200);
         printf("Flooding Step: %d\n", head);
     }
     FILE *fp = fopen("output.txt", "w");
-    printf("\n\n�Z���x�}:\n");
+    // printf("\n\n�Z���x�}:\n");
     for(int i=1; i<=n; i++){
         for(int j=1; j<=m; j++){
             if(i==ei && j==ej) fprintf(fp, "%3s", "E");
