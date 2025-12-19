@@ -2,8 +2,8 @@
 #include <string.h>
 #include <windows.h>
 #include <stdbool.h>
-
 #define MAXN 1000
+
 int output(int ei, int ej, int ansArray[MAXN + 2][MAXN + 2], int n, int m, int a, int b);
 int condition(int a, int b,bool c);
 char board[MAXN + 2][MAXN + 2];
