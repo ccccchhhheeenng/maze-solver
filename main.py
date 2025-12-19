@@ -9,7 +9,7 @@ class Data:
     def load_maze(self):  #讀取
         maze=[[0]*17 for _ in range(17)]
         bottom_txt_cond,steps,cond=self.load_condition()
-        if cond==0:
+        if cond==0 or cond==3:
             return bottom_txt_cond,steps,cond,maze
         filename="output.txt"
         tmp=[]
@@ -34,14 +34,14 @@ class Data:
     def update_data(self):
         while True:
             bottom_txt_cond,steps,cond,maze=self.load_maze()
-            if cond:
-                if cond!=3:
-                    with lock:
-                        self.bottom_txt_cond=bottom_txt_cond
-                        self.steps=steps
-                        self.cond=cond
-                        self.maze=maze
+            if cond and cond!=3:
+                with lock:
+                    self.bottom_txt_cond=bottom_txt_cond
+                    self.steps=steps
+                    self.cond=cond
+                    self.maze=maze
             else:
+                if cond==3:continue
                 print("data load failed, retrying...")
             time.sleep(0.2)
 data=Data()

@@ -3,7 +3,7 @@
     cond 0:資料寫入中 不要讀取資料
     cond 1:資料正常輸入 正在尋找結果
     cond 2:火柴人往終點跑的動畫
-    cond 3:不要讀取資料
+    cond 3:不要讀取資料，浪費效能
 底部文字用var:
     bottom_cond 0:BFS
     bottom_cond 1:floodfill
