@@ -1,4 +1,4 @@
-import pygame,sys,time,threading
+import pygame,sys,time,threading,subprocess
 lock = threading.Lock()
 class Data:
     def __init__(self):
@@ -57,7 +57,21 @@ PATH_COLOR = (255, 255, 255)  #路的顏色
 END_COLOR = (180, 80, 80) #E的顏色
 START_COLOR = (70, 130, 180) #S的顏色
 ANS_COLOR = (51,255,153) #答案的顏色
+button_bfs = pygame.Rect(50, 10, 180, 40)
+button_flood = pygame.Rect(250, 10, 180, 40)
 
+def draw_button(screen, rect, text):
+    pygame.draw.rect(screen, (80,80,80), rect)
+    pygame.draw.rect(screen, (200,200,200), rect, 3)
+    font = pygame.font.SysFont("microsoftyahei", 24)
+    txt = font.render(text, True, (255,255,255))
+    screen.blit(txt, (rect.x + 10, rect.y + 8))
+
+def run_bfs():
+    subprocess.Popen(["bfs.exe"])   # 你的 BFS C 程式
+
+def run_flood():
+    subprocess.Popen(["floodfill.exe"]) # 你的 Flood Fill C 程式
 
 
 def load_origin_maze():  #讀取
@@ -193,7 +207,7 @@ def main():
     path_index = 0
     path_timer = 0
     answer_path = None
-   
+    
     screen_width=cols*TILE_SIZE
     screen_height=rows*TILE_SIZE
    
@@ -201,7 +215,6 @@ def main():
     screen = pygame.display.set_mode((screen_width, screen_height+50))
     pygame.display.set_caption("迷宮")
     clock = pygame.time.Clock()
-   
     running = True
     while running:
         dt=clock.tick(5)/1000
@@ -213,9 +226,14 @@ def main():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
-       
+            elif event.type == pygame.MOUSEBUTTONDOWN: 
+                mx, my = event.pos 
+                if button_bfs.collidepoint(mx, my): run_bfs() 
+                if button_flood.collidepoint(mx, my): run_flood()
         screen.fill((30, 30, 30))  # 背景色
         if cond==-1:
+            draw_button(screen, button_bfs, "執行 BFS") 
+            draw_button(screen, button_flood, "執行 Flood Fill")
             path_index = 0
             path_timer = 0
             answer_path = None
