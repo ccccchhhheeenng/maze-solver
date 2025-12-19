@@ -215,7 +215,6 @@ def main():
                     running = False
        
         screen.fill((30, 30, 30))  # 背景色
-        print(cond)
         if cond==-1:
             path_index = 0
             path_timer = 0
