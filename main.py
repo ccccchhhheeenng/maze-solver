@@ -2,15 +2,15 @@ import pygame,sys,time,threading
 lock = threading.Lock()
 class Data:
     def __init__(self):
-            self.qwert=0
+            self.bottom_txt_cond=0
             self.steps=0
             self.cond=0
             self.maze=[[0]*17 for _ in range(17)]
     def load_maze(self):  #讀取
         maze=[[0]*17 for _ in range(17)]
-        qwert,steps,cond=self.load_condition()
+        bottom_txt_cond,steps,cond=self.load_condition()
         if cond==0:
-            return qwert,steps,cond,maze
+            return bottom_txt_cond,steps,cond,maze
         filename="output.txt"
         tmp=[]
         with open(filename, "r", encoding="utf-8") as f:
@@ -21,7 +21,7 @@ class Data:
                         maze[i][j]=int(tmp[j])
                     except:
                         maze[i][j]=tmp[j]
-        return qwert,steps,cond,maze
+        return bottom_txt_cond,steps,cond,maze
     def load_condition(self):
         try:
             with open("condition.txt", "r", encoding="utf-8") as f:     
@@ -33,10 +33,10 @@ class Data:
             return 0,0,0
     def update_data(self):
         while True:
-            qwert,steps,cond,maze=self.load_maze()
+            bottom_txt_cond,steps,cond,maze=self.load_maze()
             if cond:
-                with lock:
-                    self.qwert=qwert
+                if cond!=3:
+                    self.bottom_txt_cond=bottom_txt_cond
                     self.steps=steps
                     self.cond=cond
                     self.maze=maze
@@ -114,7 +114,7 @@ def get_answer_path(maze):
     
     return path
     
-def draw_maze(steps,screen, maze,screen_height):  #畫出來
+def draw_maze(bottom_txt_cond,steps,screen, maze,screen_height):  #畫出來
     rows = len(maze)
     cols = len(maze[0])
     original=load_origin_maze()
@@ -186,7 +186,7 @@ def draw_final_maze(steps,screen, maze,screen_height,dt, path_index=0, path_time
 
 def main():
     with lock:
-        qwert,steps,maze=data.qwert,data.steps,data.maze
+        bottom_txt_cond,steps,maze,bottom_txt_cond=data.bottom_txt_cond,data.steps,data.maze,data.bottom_txt_cond
     rows=len(maze)
     cols=len(maze[0])
     global answer_path, path_index, path_timer
@@ -206,7 +206,7 @@ def main():
     while running:
         dt=clock.tick(5)/1000
         with lock:
-            qwert,steps,maze=data.qwert,data.steps,data.maze
+            bottom_txt_cond,steps,maze,cond,bottom_txt_cond=data.bottom_txt_cond,data.steps,data.maze,data.cond,data.bottom_txt_cond
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -215,7 +215,15 @@ def main():
                     running = False
        
         screen.fill((30, 30, 30))  # 背景色
-        if steps==131: 
+        print(cond)
+        if cond==-1:
+            path_index = 0
+            path_timer = 0
+            answer_path = None
+            font = pygame.font.SysFont("microsoftyahei", 60)
+            text = font.render(f"等待中...", True, (200, 200, 200))
+            screen.blit(text, (screen_width//2-100, screen_height//2-30))
+        elif cond==2: 
             rows = len(maze)
             cols = len(maze[0])
             original=load_origin_maze()
@@ -228,9 +236,16 @@ def main():
                         pygame.draw.rect(screen, PATH_COLOR, rect)  
             path_index, path_timer = draw_final_maze(steps,screen, maze, screen_height, dt, path_index, path_timer) 
         else:
-            draw_maze(qwert,steps,screen, maze, screen_height)   
-        font = pygame.font.SysFont("microsoftyahei", 40)
-        text = font.render(f"BFS演算法", True, (200, 200, 200))
+            draw_maze(bottom_txt_cond,steps,screen, maze, screen_height)   
+        bottom_text="目前演算法："
+        if cond==-1:
+            bottom_text+="等待C語言資料中..."
+        elif bottom_txt_cond:
+            bottom_text+="Flood Fill"
+        else:
+            bottom_text+="BFS"
+        font = pygame.font.SysFont("microsoftyahei", 30)
+        text = font.render(bottom_text, True, (200, 200, 200))
         screen.blit(text, (200, screen_height)) 
         pygame.display.flip()
     pygame.quit()
