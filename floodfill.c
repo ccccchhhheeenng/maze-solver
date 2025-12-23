@@ -87,7 +87,7 @@ int main() {
             queue[tail++] = (Node){nx, ny};
         }
         output(ans, n, m, 1, head);
-        Sleep(200);
+        Sleep(50);
         printf("Flooding Step: %d\n", head);
     }
     FILE *fp = fopen("output.txt", "w");

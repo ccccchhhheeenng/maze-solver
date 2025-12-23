@@ -7,20 +7,23 @@ class Data:
             self.cond=0
             self.maze=[[0]*17 for _ in range(17)]
     def load_maze(self):  #讀取
-        maze=[[0]*17 for _ in range(17)]
+        maze=self.maze
         bottom_txt_cond,steps,cond=self.load_condition()
-        if cond==0 or cond==3:
+        if cond==0:
             return bottom_txt_cond,steps,cond,maze
         filename="output.txt"
         tmp=[]
-        with open(filename, "r", encoding="utf-8") as f:
-            for i,line in enumerate(f):
-                tmp=line.split()
-                for j in range(len(tmp)):
-                    try:
-                        maze[i][j]=int(tmp[j])
-                    except:
-                        maze[i][j]=tmp[j]
+        try:
+            with open(filename, "r", encoding="utf-8") as f:
+                for i,line in enumerate(f):
+                    tmp=line.split()
+                    for j in range(len(tmp)):
+                        try:
+                            maze[i][j]=int(tmp[j])
+                        except:
+                            maze[i][j]=tmp[j]
+        except:
+            pass
         return bottom_txt_cond,steps,cond,maze
     def load_condition(self):
         try:
@@ -43,7 +46,7 @@ class Data:
             else:
                 if cond==3:continue
                 print("data load failed, retrying...")
-            time.sleep(0.2)
+            time.sleep(0.1)
 data=Data()
 
 

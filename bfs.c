@@ -96,7 +96,7 @@ int main() {
             queue[tail++] = (Node){nx, ny};
         }
         output(ans, n, m, 0, head);
-        Sleep(200);
+        Sleep(50);
         printf("Searching Path Step: %d\n", head);
     }
 
