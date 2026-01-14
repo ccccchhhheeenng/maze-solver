@@ -159,7 +159,7 @@ def draw_maze(bottom_txt_cond,steps,screen, maze,screen_height):  #畫出來
             if maze[y][x] != -1:
                  font = pygame.font.SysFont("microsoftyahei", 10)
                  num = font.render(str(maze[y][x]), True, (0,0,0))    #鑲嵌數字
-                 screen.blit(num, (x*TILE_SIZE+8, y*TILE_SIZE+7))
+                 screen.blit(num, (x*TILE_SIZE+4, y*TILE_SIZE+7))
     font = pygame.font.SysFont("microsoftyahei", 20)
     text = font.render(f"探索步數：{steps}", True, (200, 200, 200))
     screen.blit(text, (10, screen_height))

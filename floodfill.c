@@ -22,7 +22,7 @@ int output(int ansArray[MAXN + 2][MAXN + 2], int n, int m, int cond, int steps){
     FILE *fp = fopen("output.txt", "w");
     for(int i=1; i<=n; i++){
         for(int j=1; j<=m; j++){
-            fprintf(fp, "%3d", ansArray[i][j]);
+            fprintf(fp, "%5d", ansArray[i][j]);
         }
         fprintf(fp, "\n");
     }
@@ -110,8 +110,8 @@ int main() {
     // printf("\n\n�Z���x�}:\n");
     for(int i=1; i<=n; i++){
         for(int j=1; j<=m; j++){
-            if(i==ei && j==ej) fprintf(fp, "%3s", "E");
-            else fprintf(fp, "%3d", ans[i][j]);
+            if(i==ei && j==ej) fprintf(fp, "%5s", "E");
+            else fprintf(fp, "%5d", ans[i][j]);
         }
         fprintf(fp, "\n");
     }

@@ -25,7 +25,7 @@ int output(int ansArray[MAXN + 2][MAXN + 2], int n, int m, int cond, int steps) 
     FILE *fp = fopen("output.txt", "w");
     for (int i = 1; i <= n; i++) {
         for (int j = 1; j <= m; j++) {
-            fprintf(fp, "%3d", ansArray[i][j]);
+            fprintf(fp, "%5d", ansArray[i][j]);
         }
         fprintf(fp, "\n");
     }
@@ -133,8 +133,8 @@ int main() {
     FILE *fp = fopen("output.txt", "w");
     for (int i = 1; i <= n; i++) {
         for (int j = 1; j <= m; j++) {
-            printf("%2d", pathMap[i][j]);
-            fprintf(fp, "%3d", pathMap[i][j]);
+            printf("%5d", pathMap[i][j]);
+            fprintf(fp, "%5d", pathMap[i][j]);
         }
         printf("\n");
         fprintf(fp, "\n");
