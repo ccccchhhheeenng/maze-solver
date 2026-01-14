@@ -5,7 +5,7 @@ class Data:
             self.bottom_txt_cond=0
             self.steps=0
             self.cond=0
-            self.maze=[[0]*17 for _ in range(17)]
+            self.maze=[[0]*33 for _ in range(33)]
     def load_maze(self):  #讀取
         maze=self.maze
         bottom_txt_cond,steps,cond=self.load_condition()
@@ -51,11 +51,9 @@ data=Data()
 
 
 def show_license():
-    print("本程式依照 Creative Commons CC BY-NC-ND 4.0 授權")
-    print("授權條款連結: https://creativecommons.org/licenses/by-nc-nd/4.0/")
-    print("請遵守：必須署名、禁止商業用途、禁止修改")
+    print("")
 
-TILE_SIZE = 40          #每個格子的大小（像素），越大越清楚
+TILE_SIZE = 20          #每個格子的大小（像素），越大越清楚
 WALL_COLOR = (0, 0, 0)  #牆的顏色
 PATH_COLOR = (255, 255, 255)  #路的顏色
 END_COLOR = (180, 80, 80) #E的顏色
@@ -80,18 +78,20 @@ def run_flood():
     subprocess.Popen(["floodfill.exe"]) # 你的 Flood Fill C 程式
 
 
-def load_origin_maze():  #讀取
-    filename="maze.txt"
-    maze=[[0]*17 for _ in range(17)]
-    tmp=[]
+def load_origin_maze():
+    filename = "maze.txt"
+    maze = [[0] * 33 for _ in range(33)]
+    
     with open(filename, "r", encoding="utf-8") as f:
-        for i,line in enumerate(f):
-            tmp=line.split()
-            for j in range(len(tmp)):
-                try:
-                    maze[i][j]=int(tmp[j])
-                except:
-                    maze[i][j]=tmp[j]
+        for i, line in enumerate(f):
+            line = line.strip()
+            if not line:
+                continue
+            for j, ch in enumerate(line):
+                if j >= 33:  # 防止超過
+                    break
+                maze[i][j] = int(ch)
+    
     return maze
 ORIGIN_MAZE = load_origin_maze()
 
@@ -103,6 +103,10 @@ def get_gradient_color(value, max_value):
     r = int(START_COLOR[0] + (END_COLOR[0] - START_COLOR[0]) * ratio)
     g = int(START_COLOR[1] + (END_COLOR[1] - START_COLOR[1]) * ratio)
     b = int(START_COLOR[2] + (END_COLOR[2] - START_COLOR[2]) * ratio)
+    if r>=255 or g>=255 or b>255:
+        r=END_COLOR[0]
+        g=END_COLOR[1]
+        b=END_COLOR[2]
 
     return (r, g, b)
 
@@ -141,21 +145,21 @@ def draw_maze(bottom_txt_cond,steps,screen, maze,screen_height):  #畫出來
     for y in range(rows):
         for x in range(cols):
             rect = pygame.Rect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE)
-            if original[y][x] == -1 :
+            if original[y][x] == 1 :
                 pygame.draw.rect(screen, WALL_COLOR, rect)
-            elif y==1 and x==0:
+            elif maze[y][x] == "S":
                 pygame.draw.rect(screen, START_COLOR, rect)
             elif maze[y][x] == "E":
                 pygame.draw.rect(screen, END_COLOR, rect)
             elif maze[y][x] != -1:
-                COLOR = get_gradient_color(maze[y][x], 60)
+                COLOR = get_gradient_color(maze[y][x], 100)
                 pygame.draw.rect(screen, COLOR, rect)  
             else:
                 pygame.draw.rect(screen, PATH_COLOR, rect)
             if maze[y][x] != -1:
-                 font = pygame.font.SysFont("microsoftyahei", 20)
+                 font = pygame.font.SysFont("microsoftyahei", 10)
                  num = font.render(str(maze[y][x]), True, (0,0,0))    #鑲嵌數字
-                 screen.blit(num, (x*TILE_SIZE+12, y*TILE_SIZE+7))
+                 screen.blit(num, (x*TILE_SIZE+8, y*TILE_SIZE+7))
     font = pygame.font.SysFont("microsoftyahei", 20)
     text = font.render(f"探索步數：{steps}", True, (200, 200, 200))
     screen.blit(text, (10, screen_height))
