@@ -112,16 +112,13 @@ def get_gradient_color(value, max_value):
 
 def get_answer_path(maze):
     path = []
-    start_y, start_x = 1, 0
-    if maze[start_y][start_x] != 0:
-        return path
+    start_y, start_x = 31, 1                    #這裏很重要，起點寫死了！！！！！！！！！！！！！！！！！還沒改
     
     path.append((start_y, start_x))
     current_y, current_x = start_y, start_x
     
     directions = [(0,1), (0,-1), (1,0), (-1,0)]
     visited = {(start_y, start_x)}
-    
     while True:
         found = False
         for dy, dx in directions:
@@ -196,7 +193,6 @@ def draw_final_maze(steps,screen, maze,screen_height,dt, path_index=0, path_time
                     y, x = answer_path[i]
                     rect = pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                     pygame.draw.rect(screen, (255,255,255), rect)
-
     font = pygame.font.SysFont("microsoftyahei", 20)
     text = font.render(f"探索步數：{steps}", True, (200, 200, 200))
     screen.blit(text, (10, screen_height))
@@ -230,7 +226,7 @@ def main():
                 steps = data.steps
                 cond = data.cond
                 maze = data.maze
-        except:
+        except: 
             pass
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -259,10 +255,10 @@ def main():
             for y in range(rows):
                 for x in range(cols):
                     rect = pygame.Rect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE)
-                    if original[y][x] == -1 : 
-                        pygame.draw.rect(screen, WALL_COLOR, rect) 
+                    if original[y][x] == 1 : 
+                        pygame.draw.rect(screen, WALL_COLOR, rect)
                     else:
-                        pygame.draw.rect(screen, PATH_COLOR, rect)  
+                        pygame.draw.rect(screen, PATH_COLOR, rect)
             path_index, path_timer = draw_final_maze(steps,screen, maze, screen_height, dt, path_index, path_timer) 
         else:
             draw_maze(bottom_txt_cond,steps,screen, maze, screen_height)   
