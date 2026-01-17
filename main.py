@@ -113,7 +113,9 @@ def get_gradient_color(value, max_value):
 def get_answer_path(maze):
     path = []
     start_y, start_x = 31, 1                    #這裏很重要，起點寫死了！！！！！！！！！！！！！！！！！還沒改
-    
+    if maze[start_y][start_x] != 0:
+        return path
+
     path.append((start_y, start_x))
     current_y, current_x = start_y, start_x
     
@@ -174,6 +176,7 @@ def draw_final_maze(steps,screen, maze,screen_height,dt, path_index=0, path_time
         if path_index >= len(answer_path):
             path_index = len(answer_path)
     # 畫出跑馬燈
+    print(len(answer_path))
     for i in range(path_index + 1):
         if i < len(answer_path):
             y, x = answer_path[i]

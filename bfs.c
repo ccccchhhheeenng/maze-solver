@@ -131,19 +131,19 @@ int main() {
     printf("\n ̵u B  :%d\n", ans[ei][ej]);
     printf("\n ̵u  |  :\n");
     FILE *fp = fopen("output.txt", "w");
-    // for (int i = 1; i <= n; i++) {
-    //     for (int j = 1; j <= m; j++) {
-    //         printf("%5d", pathMap[i][j]);
-    //         fprintf(fp, "%5d", pathMap[i][j]);
-    //     }
-    //     printf("\n");
-    //     fprintf(fp, "\n");
-    // }
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= m; j++) {
+            printf("%5d", pathMap[i][j]);
+            fprintf(fp, "%5d", pathMap[i][j]);
+        }
+        printf("\n");
+        fprintf(fp, "\n");
+    }
     fclose(fp);
     FILE *fp2 = fopen("condition.txt", "w");
     fprintf(fp2, "%d,%d,%d\n", 0, head, 2);
     fclose(fp2);
-    Sleep(15000);
+    Sleep(40000);
     fp2 = fopen("condition.txt", "w");
     fprintf(fp2, "%d,%d,%d\n", 0, head, -1);
     fclose(fp2);
