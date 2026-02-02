@@ -53,7 +53,7 @@ data=Data()
 def show_license():
     print("")
 
-TILE_SIZE = 20          #每個格子的大小（像素），越大越清楚
+TILE_SIZE = 60          #每個格子的大小（像素），越大越清楚
 WALL_COLOR = (0, 0, 0)  #牆的顏色
 PATH_COLOR = (255, 255, 255)  #路的顏色
 END_COLOR = (180, 80, 80) #E的顏色
@@ -142,23 +142,33 @@ def draw_maze(bottom_txt_cond,steps,screen, maze,screen_height):  #畫出來
     cols = len(maze[0])
     original=ORIGIN_MAZE
     for y in range(rows):
+        ycali=((TILE_SIZE-(TILE_SIZE/15))*((y+1)//2)+4*(y//2)) #校準 應該吧
         for x in range(cols):
-            rect = pygame.Rect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE)
+            xcali=((TILE_SIZE-(TILE_SIZE/15))*((x+1)//2)+4*(x//2)) #校準 應該吧
+            if x%2==0 and y%2==0:
+                rect = pygame.Rect(x*TILE_SIZE-xcali, y*TILE_SIZE-ycali, TILE_SIZE/15, TILE_SIZE/15)
+            elif x%2==0 and y%2==1:
+                rect = pygame.Rect(x*TILE_SIZE-xcali, y*TILE_SIZE-ycali, TILE_SIZE/15, TILE_SIZE-(TILE_SIZE/15))
+            elif x%2==1 and y%2==0:
+                rect = pygame.Rect(x*TILE_SIZE-xcali, y*TILE_SIZE-ycali, TILE_SIZE-(TILE_SIZE/15), TILE_SIZE/15)
+            elif x%2==1 and y%2==1:
+                rect = pygame.Rect(x*TILE_SIZE-xcali, y*TILE_SIZE-ycali, TILE_SIZE-(TILE_SIZE/15), TILE_SIZE-(TILE_SIZE/15))
+
             if original[y][x] == 1 :
                 pygame.draw.rect(screen, WALL_COLOR, rect)
-            elif maze[y][x] == "S":
+            if maze[y][x] == "S":
                 pygame.draw.rect(screen, START_COLOR, rect)
             elif maze[y][x] == "E":
                 pygame.draw.rect(screen, END_COLOR, rect)
             elif maze[y][x] != -1:
                 COLOR = get_gradient_color(maze[y][x], 100)
                 pygame.draw.rect(screen, COLOR, rect)  
-            else:
-                pygame.draw.rect(screen, PATH_COLOR, rect)
-            if maze[y][x] != -1:
-                 font = pygame.font.SysFont("microsoftyahei", 10)
-                 num = font.render(str(maze[y][x]), True, (0,0,0))    #鑲嵌數字
-                 screen.blit(num, (x*TILE_SIZE+4, y*TILE_SIZE+7))
+            # else:
+            #     pygame.draw.rect(screen, PATH_COLOR, rect)
+            # if maze[y][x] != -1:
+            #      font = pygame.font.SysFont("microsoftyahei", 10)
+            #      num = font.render(str(maze[y][x]), True, (0,0,0))    #鑲嵌數字
+            #      screen.blit(num, (x*TILE_SIZE+4, y*TILE_SIZE+7))
     font = pygame.font.SysFont("microsoftyahei", 20)
     text = font.render(f"探索步數：{steps}", True, (200, 200, 200))
     screen.blit(text, (10, screen_height))
@@ -176,11 +186,19 @@ def draw_final_maze(steps,screen, maze,screen_height,dt, path_index=0, path_time
         if path_index >= len(answer_path):
             path_index = len(answer_path)
     # 畫出跑馬燈
-    print(len(answer_path))
     for i in range(path_index + 1):
         if i < len(answer_path):
             y, x = answer_path[i]
-            rect = pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+            ycali=((TILE_SIZE-(TILE_SIZE/15))*((y+1)//2)+4*(y//2)) #校準 應該吧
+            xcali=((TILE_SIZE-(TILE_SIZE/15))*((x+1)//2)+4*(x//2)) #校準 應該吧
+            if x%2==0 and y%2==0:
+                rect = pygame.Rect(x*TILE_SIZE-xcali, y*TILE_SIZE-ycali, TILE_SIZE/15, TILE_SIZE/15)
+            elif x%2==0 and y%2==1:
+                rect = pygame.Rect(x*TILE_SIZE-xcali, y*TILE_SIZE-ycali, TILE_SIZE/15, TILE_SIZE-(TILE_SIZE/15))
+            elif x%2==1 and y%2==0:
+                rect = pygame.Rect(x*TILE_SIZE-xcali, y*TILE_SIZE-ycali, TILE_SIZE-(TILE_SIZE/15), TILE_SIZE/15)
+            elif x%2==1 and y%2==1:
+                rect = pygame.Rect(x*TILE_SIZE-xcali, y*TILE_SIZE-ycali, TILE_SIZE-(TILE_SIZE/15), TILE_SIZE-(TILE_SIZE/15))
             pygame.draw.rect(screen, ANS_COLOR, rect)
             if i==path_index :
                 if i%2==0:
@@ -214,8 +232,8 @@ def main():
     path_timer = 0
     answer_path = None
     
-    screen_width=cols*TILE_SIZE
-    screen_height=rows*TILE_SIZE
+    screen_width=16*TILE_SIZE+(TILE_SIZE/15)
+    screen_height=16*TILE_SIZE+(TILE_SIZE/15)
     pygame.init()
     screen = pygame.display.set_mode((screen_width, screen_height+50))
     pygame.display.set_caption("迷宮")
@@ -241,7 +259,7 @@ def main():
                 mx, my = event.pos 
                 if button_bfs.collidepoint(mx, my): run_bfs() 
                 if button_flood.collidepoint(mx, my): run_flood()
-        screen.fill((30, 30, 30))  # 背景色
+        screen.fill((255, 255, 255))  # 背景色
         if cond==-1:
             draw_button(screen, button_bfs, "執行 BFS") 
             draw_button(screen, button_flood, "執行 Flood Fill")
@@ -256,8 +274,17 @@ def main():
             cols = len(maze[0])
             original=load_origin_maze()
             for y in range(rows):
+                ycali=((TILE_SIZE-(TILE_SIZE/15))*((y+1)//2)+4*(y//2)) #校準 應該吧
                 for x in range(cols):
-                    rect = pygame.Rect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE)
+                    xcali=((TILE_SIZE-(TILE_SIZE/15))*((x+1)//2)+4*(x//2)) #校準 應該吧
+                    if x%2==0 and y%2==0:
+                        rect = pygame.Rect(x*TILE_SIZE-xcali, y*TILE_SIZE-ycali, TILE_SIZE/15, TILE_SIZE/15)
+                    elif x%2==0 and y%2==1:
+                        rect = pygame.Rect(x*TILE_SIZE-xcali, y*TILE_SIZE-ycali, TILE_SIZE/15, TILE_SIZE-(TILE_SIZE/15))
+                    elif x%2==1 and y%2==0:
+                        rect = pygame.Rect(x*TILE_SIZE-xcali, y*TILE_SIZE-ycali, TILE_SIZE-(TILE_SIZE/15), TILE_SIZE/15)
+                    elif x%2==1 and y%2==1:
+                        rect = pygame.Rect(x*TILE_SIZE-xcali, y*TILE_SIZE-ycali, TILE_SIZE-(TILE_SIZE/15), TILE_SIZE-(TILE_SIZE/15))
                     if original[y][x] == 1 : 
                         pygame.draw.rect(screen, WALL_COLOR, rect)
                     else:
